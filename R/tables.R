@@ -129,7 +129,7 @@ is_table <- function(x) {
 #' @param x Table.
 #' @param parsers Parser or list thereof (see \code{\link{parser}}).
 #' @param as Type of object to return. If "table", a table of the same type as \code{x}, otherwise a list.
-#' ... Arguments passed to \code{\link{eval_parser}}.
+#' @param ... Arguments passed to \code{\link{eval_parser}}.
 #' @family Table functions
 #' @export
 #' @examples
