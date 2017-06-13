@@ -11,8 +11,9 @@ parse_table(x, parsers, as = c("table", "list"), ...)
 
 \item{parsers}{Parser or list thereof (see \code{\link{parser}}).}
 
-\item{as}{Type of object to return. If "table", a table of the same type as \code{x}, otherwise a list.
-... Arguments passed to \code{\link{eval_parser}}.}
+\item{as}{Type of object to return. If "table", a table of the same type as \code{x}, otherwise a list.}
+
+\item{...}{Arguments passed to \code{\link{eval_parser}}.}
 }
 \description{
 Applies parsers to a table and coerces the result to a table of the same type.
