@@ -1,0 +1,18 @@
+Package: cgr
+Type: Package
+Title: R Functions for Columbia Glacier Research
+Version: 0.1.0
+Author: Ethan Welty
+Maintainer: Ethan Welty <ethan.welty@gmail.com>
+Description: Functions for reoccuring data parsing, processing, and analysis steps.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports:
+  magrittr,
+  units
+Suggests:
+  data.table,
+  tibble,
+  dtplyr
+RoxygenNote: 6.0.1
