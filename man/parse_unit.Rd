@@ -24,6 +24,10 @@ parse_unit("m/s")
 parse_unit("m s-1")
 parse_unit("kg * (m^2 / s^3)")
 parse_unit("kg m2 s-3")
+parse_unit("in")
+parse_unit("in/s")
+parse_unit("°")
+parse_unit("µm/s")
 }
 \seealso{
 Other Unit functions: \code{\link{as_units}},

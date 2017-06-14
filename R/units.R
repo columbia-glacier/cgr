@@ -16,11 +16,23 @@
 #' parse_unit("m s-1")
 #' parse_unit("kg * (m^2 / s^3)")
 #' parse_unit("kg m2 s-3")
+#' parse_unit("in")
+#' parse_unit("in/s")
+#' parse_unit("°")
+#' parse_unit("µm/s")
 parse_unit <- function(x) {
   functions = list(
     function(x) {
+      nots <- c("*", "/", "^", "(", ")") %>%
+        paste0("\\", ., collapse = "") %>%
+        paste0("[^", ., "]")
       x %>%
         as.character() %>%
+        gsub(paste0("(", nots, ")\\s+(", nots, ")"), "\\1*\\2", .) %>%
+        gsub("\\s+", "", .) %>%
+        gsub(paste0("(", nots, "+)"), "`\\1`", .) %>%
+        gsub("`([0-9]+)`", "\\1", .) %>%
+        gsub("``", "`", .) %>%
         parse(text = .) %>%
         eval(envir = units::ud_units, enclos = baseenv())
     },
