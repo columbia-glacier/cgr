@@ -162,6 +162,37 @@ parse_table <- function(x, functions, as = c("table", "list"), enclos = globalen
   }
 }
 
+#' Bind tables by row
+#'
+#' Same as \code{\link[data.table]{rbindlist}}, but returns a table of the same type as the inputs.
+#'
+#' @param l List containing \code{data.table}, \code{data.frame} or \code{list} objects.
+#' @param ... Arguments passed to \code{\link[data.table]{rbindlist}}.
+#' @family Table functions
+#' @export
+#' @examples
+#' ldf <- list(
+#'   data.frame(x = 1),
+#'   data.frame(x = 2)
+#' )
+#' str(rbind_tables(ldf))
+#' \dontrun{
+#' ldt <- lapply(ldf, as_table, "data.table")
+#' str(rbind_tables(ldt))
+#' ltb <- lapply(ldf, as_table, "tibble")
+#' str(rbind_tables(ltb))
+#' }
+rbind_tables <- function(l, ...) {
+  table_type <- l %>%
+    sapply(parse_table_type) %>%
+    unique()
+  if (length(table_type) != 1) {
+    table_type <- "data.frame"
+  }
+  data.table::rbindlist(l, ...) %>%
+    as_table(type = table_type)
+}
+
 #' Remove empty table dimensions
 #'
 #' Removes empty rows and columns from a table.

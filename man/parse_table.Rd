@@ -38,6 +38,7 @@ parse_table(df, parsers, as = "list")
 Other Table functions: \code{\link{as_table}},
   \code{\link{create_table}}, \code{\link{is_table}},
   \code{\link{parse_table_type}},
+  \code{\link{rbind_tables}},
   \code{\link{remove_empty_dimensions}},
   \code{\link{write_table}}
 }
