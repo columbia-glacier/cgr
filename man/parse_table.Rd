@@ -4,31 +4,35 @@
 \alias{parse_table}
 \title{Parse a table}
 \usage{
-parse_table(x, parsers, as = c("table", "list"), ...)
+parse_table(x, functions, as = c("table", "list"), enclos = globalenv(),
+  ...)
 }
 \arguments{
 \item{x}{Table.}
 
-\item{parsers}{Parser or list thereof (see \code{\link{parser}}).}
+\item{functions}{Function or list thereof. If a list, any names are reused in the parsed results.}
 
 \item{as}{Type of object to return. If "table", a table of the same type as \code{x}, otherwise a list.}
 
-\item{...}{Arguments passed to \code{\link{eval_parser}}.}
+\item{enclos}{Environment in which to look for objects not found in \code{x}.}
+
+\item{...}{Arguments passed to \code{\link{feval}}.}
 }
 \description{
 Applies parsers to a table and coerces the result to a table of the same type.
 }
 \examples{
-x <- data.frame(x = 1:5, y = 6:10)
+df <- data.frame(x = 1:5, y = 6:10)
 parsers <- list(
-  xx = parser(x + 10, "x"),
-  xy = parser(x + y, c("x", "y"))
+  xx = function(x) {x + 10},
+  xy = function(x, y) {x + y}
 )
-parse_table(x, parsers)
-parse_table(x, parsers, as = "table")
-parsers$z = parser(z * 10, "z")
-parse_table(x, parsers)
-parse_table(list(x = 1:5), parsers)
+parse_table(df, parsers)
+parse_table(as.list(df), parsers)
+parse_table(df, parsers, as = "list")
+parsers$z = function(z) {z * 10}
+parse_table(df, parsers)
+parse_table(df, parsers, as = "list")
 }
 \seealso{
 Other Table functions: \code{\link{as_table}},
