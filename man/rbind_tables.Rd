@@ -4,10 +4,14 @@
 \alias{rbind_tables}
 \title{Bind tables by row}
 \usage{
-rbind_tables(l, ...)
+rbind_tables(l, use.names = fill, fill = TRUE, ...)
 }
 \arguments{
 \item{l}{List containing \code{data.table}, \code{data.frame} or \code{list} objects.}
+
+\item{use.names}{Whether to bind tables by matching column names.}
+
+\item{fill}{Whether to fill missing columns with \code{NA}.}
 
 \item{...}{Arguments passed to \code{\link[data.table]{rbindlist}}.}
 }

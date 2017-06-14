@@ -167,6 +167,8 @@ parse_table <- function(x, functions, as = c("table", "list"), enclos = globalen
 #' Same as \code{\link[data.table]{rbindlist}}, but returns a table of the same type as the inputs.
 #'
 #' @param l List containing \code{data.table}, \code{data.frame} or \code{list} objects.
+#' @param use.names Whether to bind tables by matching column names.
+#' @param fill Whether to fill missing columns with \code{NA}.
 #' @param ... Arguments passed to \code{\link[data.table]{rbindlist}}.
 #' @family Table functions
 #' @export
@@ -182,14 +184,14 @@ parse_table <- function(x, functions, as = c("table", "list"), enclos = globalen
 #' ltb <- lapply(ldf, as_table, "tibble")
 #' str(rbind_tables(ltb))
 #' }
-rbind_tables <- function(l, ...) {
+rbind_tables <- function(l, use.names = fill, fill = TRUE, ...) {
   table_type <- l %>%
     sapply(parse_table_type) %>%
     unique()
   if (length(table_type) != 1) {
     table_type <- "data.frame"
   }
-  data.table::rbindlist(l, ...) %>%
+  data.table::rbindlist(l, use.names = use.names, fill = fill, ...) %>%
     as_table(type = table_type)
 }
 
