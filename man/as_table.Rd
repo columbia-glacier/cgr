@@ -29,5 +29,6 @@ as_table(x, "tbl_dt")
 Other Table functions: \code{\link{create_table}},
   \code{\link{is_table}}, \code{\link{parse_table_type}},
   \code{\link{parse_table}},
-  \code{\link{remove_empty_dimensions}}
+  \code{\link{remove_empty_dimensions}},
+  \code{\link{write_table}}
 }

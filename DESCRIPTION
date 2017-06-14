@@ -11,9 +11,9 @@ LazyData: true
 Imports:
   methods,
   magrittr,
-  units
+  units,
+  data.table
 Suggests:
-  data.table,
   tibble,
   dtplyr
 RoxygenNote: 6.0.1

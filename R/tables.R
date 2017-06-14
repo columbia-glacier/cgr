@@ -194,3 +194,31 @@ remove_empty_dimensions <- function(x, ignore = NULL) {
   x %>%
     subset(!is_empty_row, !is_empty_col)
 }
+
+#' Write table to file
+#'
+#' Writes a table to a standard format.
+#'
+#' @param x Table.
+#' @param file Output file name. "" indicates output to the console.
+#' @family Table functions
+#' @export
+#' @examples
+#' df <- data.frame(
+#'   date = Sys.Date(),
+#'   date_time = Sys.time(),
+#'   string = "abc",
+#'   integer = as.integer(123),
+#'   number = 123.456,
+#'   boolean = TRUE
+#' )
+#' write_table(df, "")
+write_table <- function(x, file = "") {
+  data.table::fwrite(
+    x = x, file = file, na = "", dec = ".",
+    sep = ",", sep2 = c("","|",""),
+    quote = "auto", qmethod = c("double"),
+    row.names = FALSE, col.names = TRUE,
+    logicalAsInt = TRUE, dateTimeAs = "ISO"
+  )
+}

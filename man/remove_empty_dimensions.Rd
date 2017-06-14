@@ -30,5 +30,6 @@ remove_empty_dimensions(tb, ignore = "x")
 \seealso{
 Other Table functions: \code{\link{as_table}},
   \code{\link{create_table}}, \code{\link{is_table}},
-  \code{\link{parse_table_type}}, \code{\link{parse_table}}
+  \code{\link{parse_table_type}},
+  \code{\link{parse_table}}, \code{\link{write_table}}
 }
