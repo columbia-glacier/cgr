@@ -49,10 +49,21 @@ parse_unit <- function(x) {
     try(x <- fun(x), silent = TRUE)
   }
   if (is_units(x)) {
-    x
+    x %>%
+      .standardize_units()
   } else {
     stop("Parsing failed")
   }
+}
+
+.standardize_units <- function(x) {
+  u <- attr(x, "units")
+  u$numerator %<>% sapply(udunits2::ud.get.symbol) %>%
+    set_names(NULL)
+  u$denominator %<>% sapply(udunits2::ud.get.symbol) %>%
+    set_names(NULL)
+  attr(x, "units") <- u
+  x
 }
 
 #' Coerce to units
