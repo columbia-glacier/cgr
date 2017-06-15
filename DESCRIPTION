@@ -12,7 +12,10 @@ Imports:
   methods,
   magrittr,
   units,
-  data.table
+  data.table,
+  stringr,
+  readr,
+  jsonlite
 Suggests:
   tibble,
   dtplyr
