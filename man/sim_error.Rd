@@ -20,8 +20,3 @@ sim_error(par, sim_fun, ..., obs, err_fun = rmse)
 \description{
 Compute errors of simulation
 }
-\examples{
-sim_fun <- function(par) {
-
-}
-}

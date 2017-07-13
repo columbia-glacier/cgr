@@ -6,10 +6,6 @@
 #' @param obs Observed values.
 #' @param err_fun Error function.
 #' @export
-#' @examples
-#' sim_fun <- function(par) {
-#'
-#' }
 sim_error <- function(par, sim_fun, ..., obs, err_fun = rmse) {
   sim_fun <- match.fun(sim_fun)
   err_fun <- match.fun(err_fun)

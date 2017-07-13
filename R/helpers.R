@@ -64,24 +64,6 @@ paste2 <- function(..., sep = " ", collapse = NULL, na.rm = FALSE) {
   }
 }
 
-#' GitHub Raw URL from Repository Address
-#'
-#' Get the URL to the raw GitHub user content corresponding to a GitHub repository address.
-#'
-#' @param repo Repository address in the format \code{username/repo[/subdir][@ref]}, where \code{ref} can be a commit, tag, or branch name. Defaults to "master".
-#' @export
-#' @examples
-#' github_raw_url("username/repo")
-#' github_raw_url("username/repo/subdir")
-#' github_raw_url("username/repo/subdir@ref")
-github_raw_url <- function(repo) {
-  repo %>%
-    stringr::str_match("^/*([^/]+)/([^/@#]+)/*([^/@#]+)*/*(?:@(.*))*/*$") %>%
-    extract(-1) %>%
-    ifelse(is.na(.), c(NA, NA, NA, "master"), .) %>%
-    {paste2("https://raw.githubusercontent.com", .[1], .[2], .[4], .[3], sep = "/", na.rm = TRUE)}
-}
-
 #' Convert to datetime
 #'
 #' @param x Object to be converted.
@@ -130,4 +112,52 @@ apply_default <- function(x, default) {
   }
   x[ind] <- default[ind]
   return(x)
+}
+
+#' Trim list
+#'
+#' Removes \code{NULL} and empty lists from a list recursively.
+#'
+#' @param x List.
+#' @export
+#' @examples
+#' x <- list(
+#'   NULL,
+#'   list(),
+#'   list(list(TRUE, list())),
+#'   list(NULL, NULL, list()),
+#'   1,
+#'   list(2, NULL),
+#'   df = data.frame(a = 1, b = 2),
+#'   integer(),
+#'   list(integer())
+#' )
+#' str(trim_list(x))
+trim_list <- function(x) {
+  .rm_null <- function(x) {
+    if (rlang::is_bare_list(x)) {
+      x %<>%
+        subset(!sapply(., is.null)) %>%
+        lapply(.rm_null)
+    }
+    x
+  }
+  .is_not_empty <- function(x) {
+    if (rlang::is_bare_list(x)) {
+      any(sapply(x, .is_not_empty))
+    } else {
+      length(x) > 0
+    }
+  }
+  .rm_empty <- function(x) {
+    if (rlang::is_bare_list(x)) {
+      x %<>%
+        subset(sapply(., .is_not_empty)) %>%
+        lapply(.rm_empty)
+    }
+    x
+  }
+  x %>%
+    .rm_null() %>%
+    .rm_empty()
 }

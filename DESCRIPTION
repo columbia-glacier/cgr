@@ -11,11 +11,8 @@ LazyData: true
 Imports:
   methods,
   magrittr,
-  units,
   data.table,
-  stringr,
-  readr,
-  jsonlite
+  rlang
 Suggests:
   tibble,
   dtplyr
