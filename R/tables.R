@@ -50,6 +50,7 @@ parse_table_type <- function(x) {
 #'
 #' @param ... Arguments passed to the corresponding table creation function.
 #' @param type Table type (passed to \code{\link{parse_table_type}}).
+#' @param stringsAsFactors Whether to convert all character columns to factors.
 #' @family Table functions
 #' @export
 #' @examples
@@ -59,15 +60,15 @@ parse_table_type <- function(x) {
 #' create_table(a = 1, b = 2, type = "tibble")
 #' create_table(a = 1, b = 2, type = "tbl_dt")
 #' }
-create_table <- function(..., type = data.frame()) {
+create_table <- function(..., type = data.frame(), stringsAsFactors = FALSE) {
   type %<>% parse_table_type()
   switch(
     type,
-    data.frame = data.frame(...),
-    data.table = data.table::data.table(...),
+    data.frame = data.frame(..., stringsAsFactors = stringsAsFactors),
+    data.table = data.table::data.table(..., stringsAsFactors = stringsAsFactors),
     tbl_df = tibble::tibble(...),
-    tbl_dt = data.table::data.table(...) %>% dtplyr::tbl_dt(copy = FALSE),
-    data.frame(...)
+    tbl_dt = data.table::data.table(..., stringsAsFactors = stringsAsFactors) %>% dtplyr::tbl_dt(copy = FALSE),
+    data.frame(..., stringsAsFactors = stringsAsFactors)
   )
 }
 
@@ -77,6 +78,7 @@ create_table <- function(..., type = data.frame()) {
 #'
 #' @param x Object passed to the corresponding table coercion function.
 #' @param type Table type (passed to \code{\link{parse_table_type}}).
+#' @param stringsAsFactors Whether to convert all character columns to factors.
 #' @param ... Arguments passed to the corresponding table coercion function.
 #' @family Table functions
 #' @export
@@ -88,15 +90,15 @@ create_table <- function(..., type = data.frame()) {
 #' as_table(x, "tibble")
 #' as_table(x, "tbl_dt")
 #' }
-as_table <- function(x, type = data.frame(), ...) {
+as_table <- function(x, type = data.frame(), stringsAsFactors = FALSE, ...) {
   type %<>% parse_table_type()
   switch(
     type,
-    data.frame = as.data.frame(x, ...),
-    data.table = data.table::as.data.table(x, ...),
+    data.frame = as.data.frame(x, stringsAsFactors = stringsAsFactors, ...),
+    data.table = data.table::as.data.table(x, stringsAsFactors = stringsAsFactors, ...),
     tbl_df = tibble::as_tibble(x, ...),
-    tbl_dt = data.table::as.data.table(x, ...) %>% dtplyr::tbl_dt(copy = FALSE),
-    as.data.frame(x, ...)
+    tbl_dt = data.table::as.data.table(x, stringsAsFactors = stringsAsFactors, ...) %>% dtplyr::tbl_dt(copy = FALSE),
+    as.data.frame(x, stringsAsFactors = stringsAsFactors, ...)
   )
 }
 

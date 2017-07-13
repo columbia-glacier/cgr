@@ -4,12 +4,14 @@
 \alias{as_table}
 \title{Coerce to table}
 \usage{
-as_table(x, type = data.frame(), ...)
+as_table(x, type = data.frame(), stringsAsFactors = FALSE, ...)
 }
 \arguments{
 \item{x}{Object passed to the corresponding table coercion function.}
 
 \item{type}{Table type (passed to \code{\link{parse_table_type}}).}
+
+\item{stringsAsFactors}{Whether to convert all character columns to factors.}
 
 \item{...}{Arguments passed to the corresponding table coercion function.}
 }

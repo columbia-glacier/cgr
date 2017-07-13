@@ -4,12 +4,14 @@
 \alias{create_table}
 \title{Create a table}
 \usage{
-create_table(..., type = data.frame())
+create_table(..., type = data.frame(), stringsAsFactors = FALSE)
 }
 \arguments{
 \item{...}{Arguments passed to the corresponding table creation function.}
 
 \item{type}{Table type (passed to \code{\link{parse_table_type}}).}
+
+\item{stringsAsFactors}{Whether to convert all character columns to factors.}
 }
 \description{
 Creates a table of the desired type.
