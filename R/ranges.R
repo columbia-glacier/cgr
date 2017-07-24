@@ -168,3 +168,67 @@ roll_ranges <- function(x, dx = NULL, dxi = 1, align = c("left", "center", "righ
 range_mean <- function(ranges) {
   ranges[, 1] + (ranges[, 2] - ranges[, 1]) / 2
 }
+
+#' Generate ranges from a column (vector)
+#'
+#' Constructs ranges that fit the coverage of point measures.
+#'
+#' @param t (atomic) Measures along a single dimension (temporal or otherwise) coercible to numeric.
+#' @param maxdt (numeric) Maximum difference in \code{t} to consider as continuous.
+#' @param x (atomic) Values of the same length as \code{t} used to ignore missing values (\code{NA}).
+#' @export
+colranges <- function(t, maxdt = Inf, x = NULL) {
+  # Sort by time
+  i <- order(t)
+  t <- t[i]
+  # Compute point criteria
+  is_na <- is.na(t)
+  if (!is.null(x)) {
+    is_na <- is_na | is.na(x[i])
+  }
+  is_break <- c(diff(as.numeric(t)) > maxdt, FALSE)
+  # Build endpoints
+  # from: not NA & (previous is (break | NA) | first)
+  # to: not NA & (next is (NA) | break | last)
+  n <- length(t)
+  is_from <- c(!is_na[1], !is_na[-1] & (is_na[-n] | is_break[-n]))
+  from <- t[is_from]
+  is_to <- c(!is_na[-n] & (is_break[-n] | is_na[-1]), !is_na[n])
+  to <- t[is_to]
+  # Close any small gaps (left by NAs)
+  if (length(from) > 0) {
+    ne <- length(from)
+    gaps <- c((as.numeric(from[-1]) - as.numeric(to[-length(to)])) <= maxdt, FALSE)
+    gaps <- c(gaps[1], gaps[-1] | gaps[-ne])
+    groups <- as.numeric(gaps)
+    groups[!gaps] <- 2:(sum(!gaps) + 1)
+    temp <- rle(groups)
+    groups <- rep(1:length(temp$values), temp$lengths)
+    dt <- data.table::data.table(from, to, groups)[, .(from = from[1], to = to[.N]), by = groups][, .(from, to)]
+  } else {
+    dt <- data.table::data.table(from, to)
+  }
+  # Return result as data.frame
+  as.data.frame(dt)
+}
+
+#' Generate ranges from a table
+#'
+#' Like \code{\link{colranges}}, but vectorized over a table.
+#'
+#' @param .data (data.frame)
+#' @param time_col (character) Name of temporal column.
+#' @param group_col (character) Name of grouping column.
+#' @param maxdt (numeric) Maximum difference in \code{time_col} to consider as continuous.
+#' @export
+tblranges <- function(.data, time_col, group_col = NULL, maxdt = Inf) {
+  variables = setdiff(names(.data), c(time_col, group_col))
+  DT <- data.table::as.data.table(.data)
+  lapply(variables, function(var) {
+    cat(paste0(var, "\n"))
+    DT[, colranges(get(time_col), maxdt = maxdt, x = get(var)), by = group_col]
+  }) %>%
+    set_names(variables) %>%
+    data.table::rbindlist(idcol = "variable") %>%
+    as.data.frame()
+}
