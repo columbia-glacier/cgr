@@ -12,7 +12,8 @@ Imports:
   methods,
   magrittr,
   data.table,
-  rlang
+  rlang,
+  ggplot2
 Suggests:
   tibble,
   dtplyr
