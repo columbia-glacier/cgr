@@ -3,6 +3,7 @@
 #' @docType package
 #' @name cgr
 #' @import magrittr
+#' @import data.table
 NULL
 
 # Quiets concerns of R CMD CHECK: no visible binding for global variable '.'
