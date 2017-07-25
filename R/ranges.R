@@ -225,7 +225,6 @@ tblranges <- function(.data, time_col, group_col = NULL, maxdt = Inf) {
   variables = setdiff(names(.data), c(time_col, group_col))
   DT <- data.table::as.data.table(.data)
   lapply(variables, function(var) {
-    cat(paste0(var, "\n"))
     DT[, colranges(get(time_col), maxdt = maxdt, x = get(var)), by = group_col]
   }) %>%
     set_names(variables) %>%
