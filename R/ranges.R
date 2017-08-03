@@ -231,3 +231,61 @@ tblranges <- function(.data, time_col, group_col = NULL, maxdt = Inf) {
     data.table::rbindlist(idcol = "variable") %>%
     as.data.frame()
 }
+
+#' Coerce range endpoints to numeric
+#'
+#' @param ranges Ranges.
+#' @export
+ranges_to_numeric <- function(ranges) {
+  ranges[["from"]] %<>% as.numeric()
+  ranges[["to"]] %<>% as.numeric()
+  ranges
+}
+
+#' Coerce range endpoints to date-time
+#'
+#' @param ranges Ranges.
+#' @param ... Arguments passed to \code{\link{as_time}}.
+#' @export
+ranges_to_datetime <- function(ranges, ...) {
+  ranges[["from"]] %<>% cgr::as_time(...)
+  ranges[["to"]] %<>% cgr::as_time(...)
+  ranges
+}
+
+#' Find interval indices
+#'
+#' @param pos (numeric)
+#' @param breaks (numeric) Sorted (weakly) increasingly.
+#' @export
+find_interval <- function(pos, breaks) {
+  ind <- findInterval(pos, breaks, rightmost.closed = TRUE)
+  N <- length(breaks) - 1
+  ind[ind == 0 | ind > N] <- NA
+  ind
+}
+
+#' Sample variables by interval
+#'
+#' @param .data (data.frame) Variables to sample.
+#' @param pos (numeric)
+#' @param breaks (numeric) Sorted (weakly) increasingly.
+#' @export
+sample_interval <- function(.data, pos, breaks) {
+  if (data.table::is.data.table(.data)) {
+    temp <- data.table::copy(.data)
+  } else {
+    temp <- data.table::as.data.table(.data)
+  }
+  temp2 <- temp[
+    , `..bin..` := find_interval(pos, breaks)
+  ][
+    , lapply(.SD, mean, na.rm = TRUE), by = "..bin..", .SDcols = names(.data)
+  ]
+  midpoints <- data.table::data.table(
+    `..bin..` = 1:(length(breaks) - 1),
+    t = breaks[-length(breaks)] + diff(breaks) / 2
+  )
+  merged <- merge(midpoints, temp2, by = "..bin..", all.x = TRUE)
+  as_table(merged[, `..bin..` := NULL], type = .data)
+}
