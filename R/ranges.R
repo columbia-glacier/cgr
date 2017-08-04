@@ -270,8 +270,19 @@ find_interval <- function(pos, breaks) {
 #' @param .data (data.frame) Variables to sample.
 #' @param pos (numeric)
 #' @param breaks (numeric) Sorted (weakly) increasingly.
+#' @param fun (function|character) Sampling function
+#' @param ... Additional arguments passed to \code{fun}
 #' @export
-sample_interval <- function(.data, pos, breaks) {
+#' @examples
+#' df <- data.frame(
+#'   t = as_time(0:9),
+#'   x = 0:9,
+#'   y = 10:19
+#' )
+#' breaks <- as_time(c(0,5,10))
+#' sample_interval(df[, c("x", "y")], df$t, breaks, fun = mean, na.rm = TRUE)
+#' sample_interval(df[, c("x", "y")], df$t, breaks, fun = max, na.rm = TRUE)
+sample_interval <- function(.data, pos, breaks, fun = mean, ...) {
   if (data.table::is.data.table(.data)) {
     temp <- data.table::copy(.data)
   } else {
@@ -280,7 +291,7 @@ sample_interval <- function(.data, pos, breaks) {
   temp2 <- temp[
     , `..bin..` := find_interval(pos, breaks)
   ][
-    , lapply(.SD, mean, na.rm = TRUE), by = "..bin..", .SDcols = names(.data)
+    , lapply(.SD, match.fun(fun), ...), by = "..bin..", .SDcols = names(.data)
   ]
   midpoints <- data.table::data.table(
     `..bin..` = 1:(length(breaks) - 1),

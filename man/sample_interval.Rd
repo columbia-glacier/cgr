@@ -4,7 +4,7 @@
 \alias{sample_interval}
 \title{Sample variables by interval}
 \usage{
-sample_interval(.data, pos, breaks)
+sample_interval(.data, pos, breaks, fun = mean, ...)
 }
 \arguments{
 \item{.data}{(data.frame) Variables to sample.}
@@ -12,7 +12,21 @@ sample_interval(.data, pos, breaks)
 \item{pos}{(numeric)}
 
 \item{breaks}{(numeric) Sorted (weakly) increasingly.}
+
+\item{fun}{(function|character) Sampling function}
+
+\item{...}{Additional arguments passed to \code{fun}}
 }
 \description{
 Sample variables by interval
+}
+\examples{
+df <- data.frame(
+  t = as_time(0:9),
+  x = 0:9,
+  y = 10:19
+)
+breaks <- as_time(c(0,5,10))
+sample_interval(df[, c("x", "y")], df$t, breaks, fun = mean, na.rm = TRUE)
+sample_interval(df[, c("x", "y")], df$t, breaks, fun = max, na.rm = TRUE)
 }
