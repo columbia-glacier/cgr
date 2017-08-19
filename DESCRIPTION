@@ -13,7 +13,9 @@ Imports:
   magrittr,
   data.table,
   rlang,
-  ggplot2
+  ggplot2,
+  sp,
+  rgdal
 Suggests:
   tibble,
   dtplyr

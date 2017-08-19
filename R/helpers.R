@@ -64,36 +64,6 @@ paste2 <- function(..., sep = " ", collapse = NULL, na.rm = FALSE) {
   }
 }
 
-#' Convert to datetime
-#'
-#' @param x Object to be converted.
-#' @param origin Date-time object, or something which can be coerced by as.POSIXct(tz = "GMT") to such an object.
-#' @param tz A time zone specification to be used for the conversion.
-#' @param format Character string giving a date-time format as used by \code{\link[base]{strptime}}.
-#' @export
-#' @examples
-#' x <- Sys.time()
-#' x == as_time(as.numeric(x))
-#' x <- 1:10
-#' as_time(x)
-#' x <- data.frame(t1 = 1:10, t2 = 1:10)
-#' as_time(x)
-as_time <- function(x, origin = as.POSIXct("1970-01-01", tz = "UTC"), tz = "UTC", format = NULL) {
-  if (any(dim(x) > 1) && methods::is(x, "matrix")) {
-    x %<>% as.data.frame()
-  }
-  if (is.atomic(x)) {
-    x %>%
-      as.POSIXct(tz = tz, origin = origin, format = format)
-  } else {
-    x %>%
-      lapply(function(xi) {
-        as.POSIXct(xi, tz = tz, origin = origin, format = format)
-      }) %>%
-      do.call(what = class(x)[1])
-  }
-}
-
 #' Apply default values
 #'
 #' @param x Vector.
