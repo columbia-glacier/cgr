@@ -15,12 +15,19 @@ sp_transform(xy, from, to, cols = 1:2)
 
 \item{cols}{Column numbers or names specifying which \code{xy} columns are x and y coordinates.}
 }
+\value{
+Object of the same class and dimensions as \code{xy} with coordinates transformed in place.
+}
 \description{
 For transformations involving NAD27 coordinates ("+datum=NAD27"), custom parameters for Alaska (excluding Aleutian islands) are automatically applied ("+towgs84=-5,135,172"). See \url{http://web.archive.org/web/20130905025856/http://surveying.wb.psu.edu/sur351/DatumTrans/datum_transformations.htm}.
 }
 \examples{
+xy <- c(-147.25079, 61.18586, 505)
+sp_transform(xy, "+proj=longlat +datum=WGS84", "+proj=utm +zone=6")
 xy <- c(x = -147.25079, y = 61.18586, z = 505)
 sp_transform(xy, "+proj=longlat +datum=WGS84", "+proj=utm +zone=6")
 xy <- data.frame(z = 505, x = -147.25079, y = 61.18586)
 sp_transform(xy, "+proj=longlat +datum=WGS84", "+proj=utm +zone=6", cols = c("x", "y"))
+xy <- data.frame(x = c(NA, -147.25079), y = c(NA, 61.18586), z = 505)
+sp_transform(xy, "+proj=longlat +datum=WGS84", "+proj=utm +zone=6")
 }

@@ -16,6 +16,8 @@
 #' sp_transform(xy, "+proj=longlat +datum=WGS84", "+proj=utm +zone=6")
 #' xy <- data.frame(z = 505, x = -147.25079, y = 61.18586)
 #' sp_transform(xy, "+proj=longlat +datum=WGS84", "+proj=utm +zone=6", cols = c("x", "y"))
+#' xy <- data.frame(x = c(NA, -147.25079), y = c(NA, 61.18586), z = 505)
+#' sp_transform(xy, "+proj=longlat +datum=WGS84", "+proj=utm +zone=6")
 sp_transform <- function(xy, from, to, cols = 1:2) {
   # Apply custom transformation parameters for NAD27
   from %<>%
@@ -31,14 +33,19 @@ sp_transform <- function(xy, from, to, cols = 1:2) {
       as.data.frame()
   }
   # Transform coordinates
+  is_complete <- stats::complete.cases(txy[, cols])
+  if (!any(is_complete)) {
+    return(xy)
+  }
   txy %<>%
+    subset(is_complete) %>%
     sp::`coordinates<-`(cols) %>%
     sp::`proj4string<-`(sp::CRS(from)) %>%
     sp::spTransform(sp::CRS(to))
   if (is_vector) {
     xy[cols] <- unlist(txy@coords)
   } else {
-    xy[, cols] <-txy@coords
+    xy[is_complete, cols] <- txy@coords
   }
   xy
 }
