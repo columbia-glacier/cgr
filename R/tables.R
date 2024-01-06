@@ -254,6 +254,6 @@ write_table <- function(x, file = "") {
     sep = ",", sep2 = c("","|",""),
     quote = "auto", qmethod = c("double"),
     row.names = FALSE, col.names = TRUE,
-    logicalAsInt = TRUE, dateTimeAs = "ISO"
+    logical01 = TRUE, dateTimeAs = "ISO"
   )
 }
